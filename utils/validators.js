@@ -12,3 +12,5 @@ const isValidPassword = (pwd) => {
     const hasNumber = /\d/.test(pwd);
     return pwd && pwd.length >= 8 && hasUppercase && hasNumber;
 };
+
+const isValidPasswordConf = (pwd, pwdConf) => pwd === pwdConf;
