@@ -14,3 +14,11 @@ const isValidPassword = (pwd) => {
 };
 
 const isValidPasswordConf = (pwd, pwdConf) => pwd === pwdConf;
+
+const isValidPasswords = (pwd, pwdConf) => {
+    if (!isValidPassword(pwd)) {
+        return false;
+    }
+
+    return !isValidPasswordConf(pwd, pwdConf);
+}
