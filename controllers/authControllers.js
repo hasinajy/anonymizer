@@ -14,3 +14,7 @@ const signup = async (req, res) => {
 
     // TODO: Implement other functions
 }
+
+module.exports = {
+    signup
+}
