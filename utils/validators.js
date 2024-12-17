@@ -27,3 +27,25 @@ const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return email && emailRegex.test(email);
 };
+
+const isValidInformation = (data) => {
+    const errors = [];
+
+    if (!isValidUsername(data.username)) {
+        errors.push("Username must be at least 3 characters.");
+    }
+    if (!isValidName(data.name)) {
+        errors.push("Name must contain only letters and spaces.");
+    }
+    if (!isValidPassword(data.password)) {
+        errors.push("Password must be at least 8 characters.");
+    }
+    if (!isValidPasswordConf(data.password, data.passwordConf)) {
+        errors.push("Passwords do not match.");
+    }
+    if (!isValidEmail(data.email)) {
+        errors.push("Invalid email format.");
+    }
+
+    return errors.length > 0 ? errors : null;
+};
