@@ -20,5 +20,10 @@ const isValidPasswords = (pwd, pwdConf) => {
         return false;
     }
 
-    return !isValidPasswordConf(pwd, pwdConf);
+    return isValidPasswordConf(pwd, pwdConf);
 }
+
+const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return email && emailRegex.test(email);
+};
