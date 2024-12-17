@@ -49,3 +49,12 @@ const isValidInformation = (data) => {
 
     return errors.length > 0 ? errors : null;
 };
+
+module.exports = {
+    isValidUsername,
+    isValidName,
+    isValidPassword,
+    isValidPasswordConf,
+    isValidEmail,
+    isValidInformation,
+};
