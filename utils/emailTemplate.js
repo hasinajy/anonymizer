@@ -107,7 +107,7 @@ const htmlTemplate = (content) => {
                 <h1>Anonimyzer</h1>
             </div>
             <div class="content">
-                <p>Your secure content is below:</p>
+                <p style="color: white">Your secure content is below:</p>
             </div>
             <div class="container">
                 ${content}

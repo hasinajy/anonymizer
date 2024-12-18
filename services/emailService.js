@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+const { generateTemplate } = require("../utils/emailTemplate");
 
 require("dotenv").config();
 
