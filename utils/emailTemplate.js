@@ -1,3 +1,19 @@
+const generateTemplate = (type, data) => {
+    let content = null;
+    switch (type) {
+        case "link":
+            content = linkTemplate(data.link, data.label);
+            break;
+        case "pin":
+            content = pinTemplate(data.pin);
+            break;
+        default:
+            break;
+    }
+
+    return htmlTemplate(content);
+}
+
 const linkTemplate = (link, label) => {
     return `
         <a href=${link}>${label}</a>
@@ -106,3 +122,4 @@ const htmlTemplate = (content) => {
 
     return template;
 };
+
