@@ -1,3 +1,9 @@
+const linkTemplate = (link, label) => {
+    return `
+        <a href=${link}>${label}</a>
+    `;
+}
+
 const htmlTemplate = (content) => {
     const template = `
     <!DOCTYPE html>
