@@ -123,3 +123,6 @@ const htmlTemplate = (content) => {
     return template;
 };
 
+module.exports = {
+    generateTemplate
+}
