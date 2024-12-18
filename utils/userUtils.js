@@ -20,4 +20,5 @@ class UserUtils {
     }
 
 }
+module.exports = UserUtils;
     
