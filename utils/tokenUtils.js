@@ -8,3 +8,7 @@ const isValidToken = (token) => {
         return false;
     }
 };
+
+module.exports = {
+    isValidToken
+}
