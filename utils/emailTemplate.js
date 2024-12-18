@@ -2,7 +2,13 @@ const linkTemplate = (link, label) => {
     return `
         <a href=${link}>${label}</a>
     `;
-}
+};
+
+const pinTemplate = (pin) => {
+    return `
+        <div class="pin">${pin}</div>
+    `;
+};
 
 const htmlTemplate = (content) => {
     const template = `
