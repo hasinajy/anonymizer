@@ -31,3 +31,7 @@ const sendEmail = async (mailOptions) => {
 
     return await transporter.sendMail(mailOptions);
 };
+
+module.exports = {
+    sendPINEmail
+}
