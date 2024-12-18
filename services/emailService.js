@@ -1,8 +1,6 @@
 const nodemailer = require("nodemailer");
 const { generateTemplate } = require("../utils/emailTemplate");
 
-require("dotenv").config();
-
 const sendPINEmail = async (to, pin) => {
     const options = {
         from: `"Anonymizer Service" <${process.env.EMAIL_USER}>`,
