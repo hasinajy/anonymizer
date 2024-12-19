@@ -17,7 +17,7 @@ const signIn = async (req, res) => {
 
     try {
         // 1. Validate email
-        const user = await userModel.findByEmail(email);
+        let user = await userModel.findByEmail(email);
 
         if (!user) {
             return sendResponse(res, 404, false, 'Email is not registered');
@@ -34,9 +34,11 @@ const signIn = async (req, res) => {
         }
 
         // 4. Validate PIN
-        const isValid = await validatePinExpiry(user.pin, user.pinExpiry, pin);
+        user = await userModel.findByEmail(email);
+        const isValid = await validatePinExpiry(user.pin, user.expiration_date, pin);
 
         if (!isValid) {
+            // TODO: Decrement attempts count
             return sendResponse(res, 400, false, 'Invalid or expired PIN');
         }
 
