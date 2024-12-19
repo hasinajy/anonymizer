@@ -1,10 +1,9 @@
-require('dotenv').config();
 const fetch = require('node-fetch');
 
 class EmailUtils {
-    static async isEmailAvalaible(email) {
+    static async isEmailAvailable(email) {
         const apiKey = process.env.ABSTRACT_API_KEY;
-        
+
         if (!apiKey) {
             throw new Error('Abstract API key is not defined in environment variables');
         }
