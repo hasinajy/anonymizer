@@ -30,3 +30,5 @@ build/
 tmp/
 temp/
 *.
+
+test.js
