@@ -3,7 +3,7 @@ const { hashPassword } = require('../utils/hashPassword');
 
 const updatePaswword = async (email, password) => {
     const query = 'Update account set password = $1 where email = $2';
-    const values = [email,hashPassword(password)];
+    const values = [email, hashPassword(password)];
     try {
         await pool.query(query, values);
     } catch (error) {
@@ -12,4 +12,9 @@ const updatePaswword = async (email, password) => {
     }
 }
 
-export { updatePaswword };
+const deleteUser = async (id) => {
+    const query = 'delete from $1'
+    
+}
+
+export { updatePaswword }; 
