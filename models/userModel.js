@@ -11,3 +11,5 @@ const updatePaswword = async (email, password) => {
         throw new Error('Faild to update password ');
     }
 }
+
+export { updatePaswword };
