@@ -34,8 +34,11 @@ const isValidInformation = (data) => {
     if (!isValidUsername(data.username)) {
         errors.push("Username must be at least 3 characters.");
     }
-    if (!isValidName(data.name)) {
-        errors.push("Name must contain only letters and spaces.");
+    if (!isValidName(data.lastName)) {
+        errors.push("Last Name must contain only letters and spaces.");
+    }
+    if (!isValidName(data.firstName)) {
+        errors.push("First Name must contain only letters and spaces.");
     }
     if (!isValidPassword(data.password)) {
         errors.push("Password must be at least 8 characters.");

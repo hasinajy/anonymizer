@@ -89,6 +89,8 @@ const updateUser = async (user) => {
     }
 };
 
+// SIGN UP
+
 const addUser = async (user) => {
     const { firstName, lastName, dateOfBirth, genderId, username, email, password } = user;
 
