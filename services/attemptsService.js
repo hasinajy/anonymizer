@@ -4,7 +4,7 @@ const canAuthenticate = async (email) => {
     const query = 'SELECT COUNT(*) as email_count FROM account WHERE email = $1 AND attempts > 0';
     const values = [email];
 
-    try {
+    try {   
         const result = await pool.query(query, values);
         return result.rows[0].email_count > 0;
     } catch (err) {
