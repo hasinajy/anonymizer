@@ -2,7 +2,7 @@ const { sendResponse } = require("../utils/responseHandler");
 const { isValidInformation } = require("../utils/validators");
 
 const userModel = require('../models/userModel');
-const emailService = require('../services/emailService');
+const { emailPin } = require('../services/emailService');
 const { generatePin, validatePinExpiry } = require('../utils/pinUtils');
 const { generateToken } = require('../utils/jwtUtils');
 
@@ -29,7 +29,7 @@ const signIn = async (req, res) => {
             await userModel.updatePin(email, generatedPin);
 
             // 3. Send PIN to email
-            await emailService.sendPin(email, generatedPin);
+            await emailPin(email, generatedPin);
             return sendResponse(res, 200, true, 'PIN sent to email');
         }
 
