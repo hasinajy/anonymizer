@@ -34,4 +34,60 @@ const deleteUser = async (email) => {
     }
 };
 
-export { updatePaswword , deleteUser }; 
+const updateUser = async (user) => {
+    const { email, username, password, attempts, pin, expiration_date } = user;
+
+    if (!email) {
+        throw new Error('Email is required to update the account');
+    }
+
+    const fields = [];
+    const values = [];
+    let index = 1;
+
+    if (username) {
+        fields.push(`username = $${index++}`);
+        values.push(username);
+    }
+    if (password) {
+        fields.push(`password = $${index++}`);
+        values.push(password);
+    }
+    if (attempts !== undefined) {
+        fields.push(`attempts = $${index++}`);
+        values.push(attempts);
+    }
+    if (pin) {
+        fields.push(`pin = $${index++}`);
+        values.push(pin);
+    }
+    if (expiration_date) {
+        fields.push(`expiration_date = $${index++}`);
+        values.push(expiration_date);
+    }
+
+    if (fields.length === 0) {
+        throw new Error('No fields to update');
+    }
+
+    // Add the email for the WHERE clause
+    values.push(email);
+
+    const query = `UPDATE account SET ${fields.join(', ')} WHERE email = $${index}`;
+
+    try {
+        const result = await pool.query(query, values);
+
+        if (result.rowCount === 0) {
+            throw new Error('No account found with the provided email');
+        }
+
+        return { message: 'Account updated successfully' };
+    } catch (err) {
+        console.error('Database error:', err);
+        throw new Error('Failed to update account');
+    }
+};
+
+
+export { updatePaswword, deleteUser  , updateUser}; 
