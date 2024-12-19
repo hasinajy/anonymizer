@@ -94,4 +94,10 @@ const findByEmail = async (email) => {
     return await pool.query(query, email);
 };
 
-export { updatePaswword, deleteUser, updateUser, findByEmail }; 
+const updatePin = async (email, pin) => {
+    const query = 'update account set expiration_date = $1 where email = $2';
+    const pinExpiry = Date.now() + 90 * 1000; // 90 seconds expiry
+    return await pool.query(query, [pinExpiry, email]);
+};
+
+export { updatePaswword, deleteUser, updateUser, findByEmail, updatePin }; 
