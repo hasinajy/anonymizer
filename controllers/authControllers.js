@@ -1,5 +1,5 @@
 const { sendResponse } = require("../utils/responseHandler");
-const { addUser } = require("../models/userModel");
+const { addUser, updateEmailValidation } = require("../models/userModel");
 const { sendSignUpValidation } = require('../services/emailService')
 
 const signup = async (req, res) => {
@@ -35,6 +35,20 @@ const signup = async (req, res) => {
     }
 };
 
+const validateSignUp = async (req, res) =>{
+    const accountId = req.params.accountId;
+    try{
+        await updateEmailValidation(accountId);
+
+        return sendResponse(res, 400, true, "Account validated successfully", null);
+    }catch ( error){
+        return sendResponse(res, 401, false, "Error while validating sign up", {
+            errors : error
+        });
+    }
+}
+
 module.exports = {
-    signup
+    signup,
+    validateSignUp
 };

@@ -123,5 +123,17 @@ const addUser = async (user) => {
     }
 };
 
+const updateEmailValidation = async (accountId) => {
+    try {
+        const query = `UPDATE account SET is_validated = true WHERE account_id = $1 AND is_validated = false;`
+        const result = await pool.query(query, [accountId]);
 
-module.exports =  { updatePaswword, deleteUser, updateUser, addUser }; 
+        // Check if a row was updated
+        return result.rowCount > 0;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+module.exports =  { updatePaswword, deleteUser, updateUser, addUser , updateEmailValidation}; 
