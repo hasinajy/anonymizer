@@ -89,5 +89,9 @@ const updateUser = async (user) => {
     }
 };
 
+const findByEmail = async (email) => {
+    const query = 'select * from account where email = $1';
+    return await pool.query(query, email);
+};
 
-export { updatePaswword, deleteUser  , updateUser}; 
+export { updatePaswword, deleteUser, updateUser, findByEmail }; 
