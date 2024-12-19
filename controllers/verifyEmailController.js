@@ -1,10 +1,11 @@
-const  checkEmailExists = require('../services/checkEmailExists');  
+const checkEmailExists = require('../services/checkEmailExists');
 
-const verifEmails = async (req, res) => {    
+const verifyEmail = async (req, res) => {
     const email = req.body.email;
     console.log('email:', email);
+
     try {
-        const emailExists = await checkEmailExists(email); 
+        const emailExists = await checkEmailExists(email);
         res.json({ emailExists });
     } catch (error) {
         console.error('Error verifying email:', error);
@@ -12,4 +13,4 @@ const verifEmails = async (req, res) => {
     }
 };
 
-module.exports = verifEmails ;
+module.exports = verifyEmail;

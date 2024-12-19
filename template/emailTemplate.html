@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
             margin: 0;
             padding: 0;
         }
+
         .email-container {
             max-width: 600px;
             margin: 0 auto;
@@ -20,28 +22,34 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
+
         .header {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .header h1 {
             font-size: 24px;
             margin: 0;
             color: #00ccff;
         }
+
         .content {
             text-align: center;
             margin-bottom: 30px;
         }
+
         .content p {
             font-size: 16px;
             line-height: 1.5;
             margin: 0 0 10px;
         }
+
         .container {
             text-align: center;
             margin: 20px 0;
         }
+
         .container a {
             display: inline-block;
             padding: 10px 20px;
@@ -51,6 +59,7 @@
             text-decoration: none;
             border-radius: 5px;
         }
+
         .container .pin {
             display: inline-block;
             font-size: 24px;
@@ -63,6 +72,7 @@
             border: 2px solid #00ccff;
             margin-top: 10px;
         }
+
         .footer {
             text-align: center;
             margin-top: 20px;
@@ -71,6 +81,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="email-container">
         <div class="header">
@@ -81,7 +92,7 @@
         </div>
         <div class="container">
             ${
-                content
+            content
             }
             <!-- <a href="{{dynamic_link}}">Access Secure Content</a> -->
             <!-- <div class="pin">{{dynamic_pin}}</div> -->
@@ -92,4 +103,5 @@
         </div>
     </div>
 </body>
+
 </html>
