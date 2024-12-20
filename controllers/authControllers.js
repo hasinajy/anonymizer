@@ -1,11 +1,13 @@
 const { sendResponse } = require("../utils/responseHandler");
-const { addUser, updateEmailValidation, signIn } = require("../models/userModel");
+const { addUser, updateEmailValidation, signIn, findByAccountId } = require("../models/userModel");
 const { sendSignUpValidation } = require('../services/emailService')
+const { resetAttempts } = require('../services/attemptsService');
 
 const userModel = require('../models/userModel');
 const { emailPin } = require('../services/emailService');
 const { generatePin, validatePin, validatePinExpiry } = require('../utils/pinUtils');
 const { generateToken } = require('../utils/jwtUtils');
+const { use } = require("../routes/authRoutes");
 
 const signup = async (req, res) => {
     const { firstName, lastName, dateOfBirth, genderId, username, password, email } = req.body;
@@ -78,14 +80,40 @@ const signInAccount = async (req, res) => {
     }
 };
 
+const validateSignInAccount = async (req, res) =>{
+    const accountId = req.params.accountId;
+    const { PIN } = req.body;
+
+    try {
+
+        let result = await findByAccountId(accountId);
+        let users = result.rows;
+        const user= users[0];
+        const pinValidation = await validatePinExpiry(user.pin,user.expiration_date, PIN);
+        console.log(pinValidation);
+        if(pinValidation){
+            await generateToken(user);
+            await resetAttempts(user.email);
+            validateToken(req,res);
+        }else{
+            await userModel.decrementAttempt(user.email);
+            return sendResponse(res, 500, false, 'Internal server error', {
+                errors : "PIN invalid or expired"
+            });
+        }
+    } catch (error) {
+    }
+}
+
 const validateToken = (req, res) => {
     // If the middleware passes, the token is valid
-    sendResponse(res, 200, true, 'Token is valid', { user: req.user });
+    sendResponse(res, 200, true, 'Token generated', { user: req.user });
 };
 
 module.exports = {
     signup,
     validateSignUp,
     signInAccount,
-    validateToken
+    validateToken,
+    validateSignInAccount
 };

@@ -73,10 +73,15 @@ const findByEmail = async (email) => {
     return await pool.query(query, [email]);
 };
 
+const findByAccountId = async (accountId) => {
+    const query = 'select * from account where account_id = $1';
+    return await pool.query(query, [accountId]);
+};
+
 const updatePin = async (email, pin) => {
     const query = 'UPDATE account SET pin = $1, expiration_date = $2 WHERE email = $3';
-    const expirationDate = new Date(Date.now() + 90 * 1000).toISOString(); // ISO format
-    const formattedDate = expirationDate.replace('T', ' ').split('.')[0]; // 'YYYY-MM-DD HH:MI:SS'
+    const expirationDate = new Date(Date.now() + 90 * 1000).toISOString();
+    const formattedDate = expirationDate.replace('T', ' ').split('.')[0]; 
     return await pool.query(query, [pin, formattedDate, email]);
 };
 
@@ -177,5 +182,6 @@ module.exports =  {
     decrementAttempt, 
     addUser , 
     updateEmailValidation,
-    signIn
+    signIn,
+    findByAccountId
 }; 

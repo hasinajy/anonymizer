@@ -1,4 +1,4 @@
-const sign = require('jsonwebtoken');
+const { sign } = require('jsonwebtoken');
 
 const generateToken = async (user) => {
     // TODO: Update token expiry date

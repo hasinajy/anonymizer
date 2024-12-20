@@ -8,8 +8,12 @@ const validatePin = (storedPin, inputPin) => {
 
 const validatePinExpiry = (storedPin, pinExpiry, inputPin) => {
     const isPinValid = storedPin === inputPin;
-    const isPinExpired = Date.now() > pinExpiry;
-
+    const currentDateTime = new Date();
+    // Soustrait 3 heures pour correspondre à l'heure de la base de données
+    currentDateTime.setHours(currentDateTime.getHours() - 3);
+    const expiryDateTime = new Date(pinExpiry);
+    const isPinExpired = currentDateTime > expiryDateTime;
+    
     return isPinValid && !isPinExpired;
 };
 
