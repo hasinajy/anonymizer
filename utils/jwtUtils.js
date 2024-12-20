@@ -1,4 +1,4 @@
-import { sign } from 'jsonwebtoken';
+import sign from 'jsonwebtoken';
 
 export function generateToken(user) {
     // TODO: Update token expiry date
