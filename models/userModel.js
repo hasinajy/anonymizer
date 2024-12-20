@@ -79,6 +79,34 @@ const updatePin = async (email, pin) => {
     return await pool.query(query, [pinExpiry, email]);
 };
 
+const signIn = async (email, password) => {
+    try {
+        if (!email || !password) {
+            throw new Error('Email and password are required.');
+        }
+
+        const query = `SELECT account_id, is_validated FROM account WHERE email = $1 AND password = $2;`;
+        const result = await pool.query(query, [email, hashPassword(password)]);
+
+        // Check if user exists
+        if (result.rowCount === 0) {
+            throw new Error('Invalid email or password.');
+        }
+
+        const account = result.rows[0];
+
+        // Check if the account is validated
+        if (!account.is_validated) {
+            throw new Error('Account is not validated. Please verify your email.');
+        }
+
+        return account.account_id;
+        
+    } catch (error) {
+        throw new Error(error.message || 'Sign-in failed.');
+    }
+};
+
 const decrementAttempt = async (email) => {
     const user = findByEmail(email);
 
