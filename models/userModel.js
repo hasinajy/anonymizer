@@ -36,10 +36,10 @@ const deleteUser = async (accountId) => {
 };
 
 const updateUser = async (user) => {
-    const { email, username, attempts, pin, expiration_date } = user;
+    const { accountId, username } = user;
 
-    if (!email) {
-        throw new Error('Email is required to update the account');
+    if (!accountId) {
+        throw new Error('Account ID is required to update the account');
     }
 
     const fields = [];
@@ -50,38 +50,20 @@ const updateUser = async (user) => {
         fields.push(`username = $${index++}`);
         values.push(username);
     }
-    if (attempts !== undefined) {
-        fields.push(`attempts = $${index++}`);
-        values.push(attempts);
-    }
-    if (pin) {
-        fields.push(`pin = $${index++}`);
-        values.push(pin);
-    }
-    if (expiration_date) {
-        fields.push(`expiration_date = $${index++}`);
-        values.push(expiration_date);
-    }
-
-    if (fields.length === 0) {
-        throw new Error('No fields to update');
-    }
 
     // Add the email for the WHERE clause
-    values.push(email);
+    values.push(accountId);
 
-    const query = `UPDATE account SET ${fields.join(', ')} WHERE email = $${index}`;
+    const query = `UPDATE account SET ${fields.join(', ')} WHERE account_id = $${index}`;
 
     try {
         const result = await pool.query(query, values);
 
         if (result.rowCount === 0) {
-            throw new Error('No account found with the provided email');
+            throw new Error('No account found with the provided accountId');
         }
 
-        return { message: 'Account updated successfully' };
     } catch (err) {
-        console.error('Database error:', err);
         throw new Error('Failed to update account');
     }
 };
