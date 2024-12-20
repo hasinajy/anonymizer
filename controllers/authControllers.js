@@ -94,7 +94,7 @@ const validateSignInAccount = async (req, res) =>{
         if(pinValidation){
             await generateToken(user);
             await resetAttempts(user.email);
-            validateToken(req,res);
+            generateTokenAccount(req,res);
         }else{
             await userModel.decrementAttempt(user.email);
             return sendResponse(res, 500, false, 'Internal server error', {
@@ -105,9 +105,12 @@ const validateSignInAccount = async (req, res) =>{
     }
 }
 
-const validateToken = (req, res) => {
-    // If the middleware passes, the token is valid
+const generateTokenAccount = (req, res) => {
     sendResponse(res, 200, true, 'Token generated', { user: req.user });
+};
+
+const validateToken = (req, res) => {
+    sendResponse(res, 200, true, 'Token is valid', { user: req.user });
 };
 
 module.exports = {
