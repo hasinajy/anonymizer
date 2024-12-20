@@ -12,6 +12,17 @@ const emailPin = async (to, pin) => {
     return await sendEmail(options);
 };
 
+const sendSignUpValidation = async (to, data) => {
+    const options = {
+        from: `"Anonymizer Service" <${process.env.EMAIL_USER}>`,
+        to: to,
+        subject: "Sign up validation",
+        html: generateTemplate("link", data)
+    };
+
+    return await sendEmail(options);
+};
+
 const sendEmail = async (mailOptions) => {
     const transporter = nodemailer.createTransport({
         service: "gmail",
@@ -32,4 +43,5 @@ const sendEmail = async (mailOptions) => {
 
 module.exports = {
     emailPin
+    sendSignUpValidation
 }

@@ -22,4 +22,4 @@ class EmailUtils {
     }
 }
 
-module.exports = EmailUtils;
+module.exports =  EmailUtils;
