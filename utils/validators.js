@@ -10,6 +10,7 @@ const isValidName = (name) => {
 const isValidPassword = (pwd) => {
     const hasUppercase = /[A-Z]/.test(pwd);
     const hasNumber = /\d/.test(pwd);
+    console.log(pwd);
     return pwd && pwd.length >= 8 && hasUppercase && hasNumber;
 };
 

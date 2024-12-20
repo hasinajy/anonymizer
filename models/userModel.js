@@ -108,7 +108,7 @@ const addUser = async (user) => {
             INSERT INTO account (person_id, username, email, password)
             VALUES ($1, $2, $3, $4);
         `;
-        await client.query(accountInsertQuery, [personId, username, email, hashPassword(password)]);
+        await client.query(accountInsertQuery, [personId, username, email, password]);
 
         await client.query('COMMIT');
 
