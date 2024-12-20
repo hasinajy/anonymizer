@@ -20,17 +20,18 @@ const updateAccount = async (req, res) =>{
     const accountId = req.params.accountId;
     const { newUsername } = req.body;
 
+    console.log(newUsername)
     try {
         await updateUser({ 
             accountId, 
             newUsername
-        })
+        });
 
         return sendResponse(res, 200, true, 'Username updated successfully.', null);
     } catch (error) {
         return sendResponse(res, 401, false, "Error while updating username", {
-            errors : error
-        })
+            errors : error.message
+        });
     }
 }
 

@@ -1,6 +1,6 @@
 const { getTokenFromHeaders, isValidToken } = require("../utils/tokenUtils");
 const { sendResponse } = require("../utils/responseHandler");
-const { isValidPassword } = require("../utils/validators");
+const { isValidUsername } = require("../utils/validators");
 
 const validateDeleteAccount = (req, res, next) => {
     const accountId = req.params.accountId;
@@ -21,7 +21,7 @@ const validateDeleteAccount = (req, res, next) => {
     }
 
 
-    if (errors) {
+    if (errors.length > 1) {
         return sendResponse(res, 401, false, "Invalid data from request", {
             errors: errors,
         });
@@ -53,7 +53,7 @@ const validateUpdateAccount = (req, res, next) => {
         errors.push("Format not valid for username")
     }
 
-    if (errors) {
+    if (errors.length > 0) {
         return sendResponse(res, 401, false, "Invalid data from request", {
             errors: errors,
         });

@@ -36,35 +36,26 @@ const deleteUser = async (accountId) => {
 };
 
 const updateUser = async (user) => {
-    const { accountId, username } = user;
+    const { accountId, newUsername } = user;
 
     if (!accountId) {
         throw new Error('Account ID is required to update the account');
     }
 
-    const fields = [];
-    const values = [];
-    let index = 1;
-
-    if (username) {
-        fields.push(`username = $${index++}`);
-        values.push(username);
-    }
-
-    // Add the email for the WHERE clause
-    values.push(accountId);
-
-    const query = `UPDATE account SET ${fields.join(', ')} WHERE account_id = $${index}`;
+    console.log(accountId);
+    console.log(newUsername);
+    
+    const query = `UPDATE account SET username = $1 WHERE account_id = $2`;
 
     try {
-        const result = await pool.query(query, values);
+        const result = await pool.query(query, [newUsername, accountId]);
 
         if (result.rowCount === 0) {
             throw new Error('No account found with the provided accountId');
         }
 
     } catch (err) {
-        throw new Error('Failed to update account');
+        throw new Error(err.message);
     }
 };
 
@@ -146,7 +137,7 @@ const addUser = async (user) => {
             INSERT INTO account (person_id, username, email, password)
             VALUES ($1, $2, $3, $4);
         `;
-        await client.query(accountInsertQuery, [personId, username, email, hashPassword(password)]);
+        await client.query(accountInsertQuery, [personId, username, email, password]);
 
         await client.query('COMMIT');
 

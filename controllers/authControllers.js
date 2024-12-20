@@ -92,7 +92,8 @@ const validateSignInAccount = async (req, res) =>{
         const pinValidation = await validatePinExpiry(user.pin,user.expiration_date, PIN);
         console.log(pinValidation);
         if(pinValidation){
-            await generateToken(user);
+            const token = await generateToken(user);
+            console.log(`token : ${token} `);
             await resetAttempts(user.email);
             generateTokenAccount(req,res);
         }else{
