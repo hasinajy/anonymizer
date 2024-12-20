@@ -9,7 +9,7 @@ const canAuthenticate = async (email) => {
         return result.rows[0].email_count > 0;
     } catch (err) {
         console.error('Database error:', err);
-        throw new Error('Failed to check email');
+        throw new Error('Unable to verify if the email can be authenticated');
     }
 };
 
@@ -21,7 +21,7 @@ const resetAttempts = async (email) => {
         await pool.query(query, values);
     } catch (err) {
         console.error('Database error:', err);
-        throw new Error('Failed to check email');
+        throw new Error('Failed to reset attempts');
     }
 }
 
