@@ -91,7 +91,7 @@ const updateUser = async (user) => {
 
 const findByEmail = async (email) => {
     const query = 'select * from account where email = $1';
-    return await pool.query(query, email);
+    return await pool.query(query, [email]);
 };
 
 const updatePin = async (email, pin) => {
@@ -100,4 +100,15 @@ const updatePin = async (email, pin) => {
     return await pool.query(query, [pinExpiry, email]);
 };
 
-export { updatePaswword, deleteUser, updateUser, findByEmail, updatePin }; 
+const decrementAttempt = async (email) => {
+    const user = findByEmail(email);
+
+    if (user.attempts == 0) {
+        throw new Error('You have reached the maximum number of attempts.')
+    }
+
+    const query = 'update account set attempts = attempts - 1 where email = $1';
+    return pool.query(query, [email]);
+}
+
+export { updatePaswword, deleteUser, updateUser, findByEmail, updatePin, decrementAttempt }; 
