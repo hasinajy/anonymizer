@@ -5,11 +5,6 @@ const deleteAccount = async (req, res) =>{
     const accountId = req.params.accountId;
 
     try {
-        if (!accountId) {
-            return sendResponse(res, 400, false, "Account ID is required.", null);
-        }
-
-        
         
         await deleteUser(accountId);
 

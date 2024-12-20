@@ -18,5 +18,6 @@ const getTokenFromHeaders = (req) => {
 };
 
 module.exports = {
-    isValidToken
+    isValidToken, 
+    getTokenFromHeaders
 }
