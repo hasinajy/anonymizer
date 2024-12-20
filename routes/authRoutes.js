@@ -1,8 +1,12 @@
 const express = require("express");
-const { signup, validateSignUp, signIn, validateToken } = require("../controllers/authControllers");
+const {
+    signup,
+    validateSignUp,
+    signIn,
+    validateToken,
+} = require("../controllers/authControllers");
 const { validateSignup } = require("../middlewares/authMiddlewares");
-
-import authenticateToken from "../middlewares/authenticateToken.js";
+const { authenticateToken } = require("../middlewares/authenticateToken");
 
 const router = express.Router();
 
@@ -229,7 +233,7 @@ router.get("/signup/:accountId", validateSignUp);
  *                   type: string
  *                   example: "Internal server error"
  */
-router.post('/signin', signIn);
-router.get('/validate-token', authenticateToken, validateToken);
+router.post("/signin", signIn);
+router.get("/validate-token", authenticateToken, validateToken);
 
 module.exports = router;
