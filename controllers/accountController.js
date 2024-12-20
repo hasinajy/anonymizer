@@ -55,5 +55,6 @@ const updateAccountPassword = async (req, res) =>{
 
 module.exports = {
     deleteAccount,
-    updateAccount
+    updateAccount,
+    updateAccountPassword
 }
