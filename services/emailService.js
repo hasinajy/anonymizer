@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 const { generateTemplate } = require("../utils/emailTemplate");
 
-const sendPINEmail = async (to, pin) => {
+const emailPin = async (to, pin) => {
     const options = {
         from: `"Anonymizer Service" <${process.env.EMAIL_USER}>`,
         to: to,
@@ -42,6 +42,6 @@ const sendEmail = async (mailOptions) => {
 };
 
 module.exports = {
-    sendPINEmail,
+    emailPin
     sendSignUpValidation
 }
