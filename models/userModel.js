@@ -1,14 +1,14 @@
 const pool = require('../config/bd');
 const { hashPassword } = require('../utils/hashPassword');
 
-const updatePasword = async (accountId, password) => {
+const updatePasword = async (user) => {
+    const { accountId, newPassword} = user;
     const query = 'Update account set password = $1 where account_id = $2';
-    const values = [accountId, hashPassword(password)];
     try {
-        await pool.query(query, values);
+        console.log("updatinggg")
+        await pool.query(query, [hashPassword(newPassword), accountId]);
     } catch (error) {
-        console.log('Error for updating password ');
-        throw new Error('Faild to update password ');
+        throw error;
     }
 };
 
@@ -84,7 +84,7 @@ const signIn = async (email, password) => {
         }
 
         const query = `SELECT account_id, is_validated FROM account WHERE email = $1 AND password = $2;`;
-        const result = await pool.query(query, [email, password]);
+        const result = await pool.query(query, [email, hashPassword(password)]);
 
         // Check if user exists
         if (result.rowCount === 0) {
@@ -137,7 +137,7 @@ const addUser = async (user) => {
             INSERT INTO account (person_id, username, email, password)
             VALUES ($1, $2, $3, $4);
         `;
-        await client.query(accountInsertQuery, [personId, username, email, password]);
+        await client.query(accountInsertQuery, [personId, username, email, hashPassword(password)]);
 
         await client.query('COMMIT');
 
