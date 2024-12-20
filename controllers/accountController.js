@@ -28,12 +28,13 @@ const updateAccount = async (req, res) =>{
 
         return sendResponse(res, 200, true, 'Username updated successfully.', null);
     } catch (error) {
-        return sendResponse(res, 401, false, "Error while deleting account", {
+        return sendResponse(res, 401, false, "Error while updating username", {
             errors : error
         })
     }
 }
 
 module.exports = {
-    deleteAccount
+    deleteAccount,
+    updateAccount
 }

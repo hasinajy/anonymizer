@@ -1,7 +1,8 @@
 const { getTokenFromHeaders, isValidToken } = require("../utils/tokenUtils");
-const { sendResponse } = require("../utils/responseHandler"); 
+const { sendResponse } = require("../utils/responseHandler");
+const { isValidUsername } = require("../utils/validators");
 
-const validateDeleteAccout = (req, res, next) => {
+const validateDeleteAccount = (req, res, next) => {
     const accountId = req.params.accountId;
     const token = getTokenFromHeaders(req);
 
@@ -19,6 +20,39 @@ const validateDeleteAccout = (req, res, next) => {
        errors.push("Account ID is required.");
     }
 
+
+    if (errors) {
+        return sendResponse(res, 401, false, "Invalid data from request", {
+            errors: errors,
+        });
+    }
+
+    next();
+};
+
+const validateUpdateAccount = (req, res, next) => {
+    const accountId = req.params.accountId;
+    const { newUsername }= req.body;
+    const token = getTokenFromHeaders(req);
+
+    let errors = [];
+
+    if(token == null){
+        errors.push("Token required for this request");
+    }
+    
+    if(!isValidToken(token)){
+        errors.push("Token is not valid");
+    }
+    
+    if (!accountId) {
+       errors.push("Account ID is required.");
+    }
+
+    if(!isValidUsername(newUsername)){
+        errors.push("Format not valid for username")
+    }
+
     if (errors) {
         return sendResponse(res, 401, false, "Invalid data from request", {
             errors: errors,
@@ -29,5 +63,6 @@ const validateDeleteAccout = (req, res, next) => {
 };
 
 module.exports = {
-    validateDeleteAccout
+    validateDeleteAccount,
+    validateUpdateAccount
  };
