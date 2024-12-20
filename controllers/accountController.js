@@ -8,6 +8,8 @@ const deleteAccount = async (req, res) =>{
         if (!accountId) {
             return sendResponse(res, 400, false, "Account ID is required.", null);
         }
+
+        
         
         await deleteUser(accountId);
 
