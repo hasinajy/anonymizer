@@ -142,7 +142,6 @@ router.post("/signup", validateSignup, signup);
  */
 router.get("/signup/:accountId", validateSignUp);
 
-router.get("/signup/:accountId", validateSignUp);
 router.post('/signin', signIn);
 
 module.exports = router;
