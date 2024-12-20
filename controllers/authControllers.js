@@ -3,7 +3,7 @@ const { isValidInformation } = require("../utils/validators");
 
 const userModel = require('../models/userModel');
 const { emailPin } = require('../services/emailService');
-const { generatePin, validatePinExpiry } = require('../utils/pinUtils');
+const { generatePin, validatePin, validatePinExpiry } = require('../utils/pinUtils');
 const { generateToken } = require('../utils/jwtUtils');
 
 const signup = async (req, res) => {
@@ -35,11 +35,25 @@ const signIn = async (req, res) => {
 
         // 4. Validate PIN
         user = await userModel.findByEmail(email);
-        const isValid = await validatePinExpiry(user.pin, user.expiration_date, pin);
+
+        // Handle invalid pin
+        const isValid = validatePin(user.pin, pin);
 
         if (!isValid) {
-            // TODO: Decrement attempts count
-            return sendResponse(res, 400, false, 'Invalid or expired PIN');
+            try {
+                await userModel.decrementAttempt(email);
+            } catch (error) {
+                return sendResponse(res, 400, false, error.message);
+            }
+
+            return sendResponse(res, 400, false, 'Invalid PIN. Please input the one sent to your email.');
+        }
+
+        // Handle pin expiry
+        const isPinExpired = validatePinExpiry(user.pin, user.expiration_date, pin);
+
+        if (isPinExpired) {
+            return sendResponse(res, 400, false, 'Expired PIN. Please request a new one.');
         }
 
         // 5. Generate and send JWT token
