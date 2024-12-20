@@ -13,4 +13,4 @@ const validatePinExpiry = (storedPin, pinExpiry, inputPin) => {
     return isPinValid && !isPinExpired;
 };
 
-export { generatePin, validatePin, validatePinExpiry };
+module.exports = { generatePin, validatePin, validatePinExpiry };

@@ -1,5 +1,5 @@
 const { sendResponse } = require("../utils/responseHandler");
-const { addUser, updateEmailValidation } = require("../models/userModel");
+const { addUser, updateEmailValidation, signIn } = require("../models/userModel");
 const { sendSignUpValidation } = require('../services/emailService')
 
 const userModel = require('../models/userModel');
@@ -53,56 +53,28 @@ const validateSignUp = async (req, res) => {
     }
 }
 
-const signIn = async (req, res) => {
-    const { email, pin } = req.body;
+const signInAccount = async (req, res) => {
+    const { email, password } = req.body;
 
     try {
-        // 1. Validate email
-        let user = await userModel.findByEmail(email);
+        const accountId = await signIn(email,password);
 
-        if (!user) {
-            return sendResponse(res, 404, false, 'Email is not registered');
-        }
-
-        if (!pin) {
+        if (accountId) {
             // 2. Generate PIN
             const generatedPin = generatePin();
-            await userModel.updatePin(email, generatedPin);
-
+            
             // 3. Send PIN to email
             await emailPin(email, generatedPin);
-            return sendResponse(res, 200, true, 'PIN sent to email');
+            await userModel.updatePin(email, generatedPin);
+
+            return sendResponse(res, 200, true, 'PIN sent to email',null);
         }
 
-        // 4. Validate PIN
-        user = await userModel.findByEmail(email);
-
-        // Handle invalid pin
-        const isValid = validatePin(user.pin, pin);
-
-        if (!isValid) {
-            try {
-                await userModel.decrementAttempt(email);
-            } catch (error) {
-                return sendResponse(res, 400, false, error.message);
-            }
-
-            return sendResponse(res, 400, false, 'Invalid PIN. Please input the one sent to your email.');
-        }
-
-        // Handle pin expiry
-        const isPinExpired = validatePinExpiry(user.pin, user.expiration_date, pin);
-
-        if (isPinExpired) {
-            return sendResponse(res, 400, false, 'Expired PIN. Please request a new one.');
-        }
-
-        // 5. Generate and send JWT token
-        const token = generateToken(user);
-        return sendResponse(res, 200, true, 'Authentication successful', { token });
     } catch (error) {
-        console.error(error);
-        sendResponse(res, 500, false, 'Internal server error');
+        console.log(error);
+        return sendResponse(res, 500, false, 'Internal server error', {
+            errors : error
+        });
     }
 };
 
@@ -114,6 +86,6 @@ const validateToken = (req, res) => {
 module.exports = {
     signup,
     validateSignUp,
-    signIn,
+    signInAccount,
     validateToken
 };

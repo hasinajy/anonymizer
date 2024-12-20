@@ -74,10 +74,12 @@ const findByEmail = async (email) => {
 };
 
 const updatePin = async (email, pin) => {
-    const query = 'update account set expiration_date = $1 where email = $2';
-    const pinExpiry = Date.now() + 90 * 1000; // 90 seconds expiry
-    return await pool.query(query, [pinExpiry, email]);
+    const query = 'UPDATE account SET pin = $1, expiration_date = $2 WHERE email = $3';
+    const expirationDate = new Date(Date.now() + 90 * 1000).toISOString(); // ISO format
+    const formattedDate = expirationDate.replace('T', ' ').split('.')[0]; // 'YYYY-MM-DD HH:MI:SS'
+    return await pool.query(query, [pin, formattedDate, email]);
 };
+
 
 const signIn = async (email, password) => {
     try {
@@ -86,7 +88,7 @@ const signIn = async (email, password) => {
         }
 
         const query = `SELECT account_id, is_validated FROM account WHERE email = $1 AND password = $2;`;
-        const result = await pool.query(query, [email, hashPassword(password)]);
+        const result = await pool.query(query, [email, password]);
 
         // Check if user exists
         if (result.rowCount === 0) {
@@ -101,8 +103,10 @@ const signIn = async (email, password) => {
         }
 
         return account.account_id;
-        
+
     } catch (error) {
+
+        console.log(error);
         throw new Error(error.message || 'Sign-in failed.');
     }
 };
@@ -164,6 +168,14 @@ const updateEmailValidation = async (accountId) => {
     }
 };
 
-export { updatePaswword, deleteUser, updateUser, findByEmail, updatePin, decrementAttempt, addUser, updateEmailValidation }; 
-
-module.exports =  { updatePasword, deleteUser, updateUser, addUser , updateEmailValidation}; 
+module.exports =  { 
+    updatePasword, 
+    deleteUser, 
+    updateUser, 
+    findByEmail, 
+    updatePin, 
+    decrementAttempt, 
+    addUser , 
+    updateEmailValidation,
+    signIn
+}; 
