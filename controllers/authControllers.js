@@ -16,14 +16,14 @@ const signup = async (req, res) => {
             firstName,
             lastName,
             dateOfBirth,
-            genderId, 
+            genderId,
             username,
             email,
             password
         });
 
         // Send confirmation email
-        const confirmationLink = `https://localhost:5000/api/auth/signup/${newUser.personId}`; 
+        const confirmationLink = `https://localhost:5000/api/auth/signup/${newUser.personId}`;
         const data = {
             "link": confirmationLink,
             "label": 'Validate Subscription'
@@ -33,22 +33,22 @@ const signup = async (req, res) => {
 
         return sendResponse(res, 200, true, 'User created successfully, check your email to confirm.', null);
     } catch (error) {
-        
+
         return sendResponse(res, 401, false, "Error while adding user", {
-            errors : error
+            errors: error
         });
     }
 };
 
-const validateSignUp = async (req, res) =>{
+const validateSignUp = async (req, res) => {
     const accountId = req.params.accountId;
-    try{
+    try {
         await updateEmailValidation(accountId);
 
         return sendResponse(res, 400, true, "Account validated successfully", null);
-    }catch ( error){
+    } catch (error) {
         return sendResponse(res, 401, false, "Error while validating sign up", {
-            errors : error
+            errors: error
         });
     }
 }
@@ -106,8 +106,14 @@ const signIn = async (req, res) => {
     }
 };
 
+const validateToken = (req, res) => {
+    // If the middleware passes, the token is valid
+    sendResponse(res, 200, true, 'Token is valid', { user: req.user });
+};
+
 module.exports = {
     signup,
     validateSignUp,
-    signIn
+    signIn,
+    validateToken
 };
