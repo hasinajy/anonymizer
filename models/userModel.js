@@ -157,4 +157,4 @@ const updateEmailValidation = async (accountId) => {
     }
 };
 
-export { updatePaswword, deleteUser, updateUser, findByEmail, updatePin, decrementAttempt, addUser, updateEmailValidation }; 
+module.exports = { updatePaswword, deleteUser, updateUser, findByEmail, updatePin, decrementAttempt, addUser, updateEmailValidation }; 
