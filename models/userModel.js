@@ -89,6 +89,28 @@ const updateUser = async (user) => {
     }
 };
 
+const findByEmail = async (email) => {
+    const query = 'select * from account where email = $1';
+    return await pool.query(query, [email]);
+};
+
+const updatePin = async (email, pin) => {
+    const query = 'update account set expiration_date = $1 where email = $2';
+    const pinExpiry = Date.now() + 90 * 1000; // 90 seconds expiry
+    return await pool.query(query, [pinExpiry, email]);
+};
+
+const decrementAttempt = async (email) => {
+    const user = findByEmail(email);
+
+    if (user.attempts == 0) {
+        throw new Error('You have reached the maximum number of attempts.')
+    }
+
+    const query = 'update account set attempts = attempts - 1 where email = $1';
+    return pool.query(query, [email]);
+}
+
 // SIGN UP
 
 const addUser = async (user) => {
@@ -135,5 +157,4 @@ const updateEmailValidation = async (accountId) => {
     }
 };
 
-
-module.exports =  { updatePaswword, deleteUser, updateUser, addUser , updateEmailValidation}; 
+export { updatePaswword, deleteUser, updateUser, findByEmail, updatePin, decrementAttempt, addUser, updateEmailValidation }; 
