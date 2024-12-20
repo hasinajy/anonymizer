@@ -10,7 +10,7 @@ const updatePaswword = async (email, password) => {
         console.log('Error for updating password ');
         throw new Error('Faild to update password ');
     }
-}
+};
 
 const deleteUser = async (email) => {
     const deleteAccountQuery = 'DELETE FROM account WHERE email = $1 RETURNING person_id';
@@ -89,5 +89,51 @@ const updateUser = async (user) => {
     }
 };
 
+// SIGN UP
 
-export { updatePaswword, deleteUser  , updateUser}; 
+const addUser = async (user) => {
+    const { firstName, lastName, dateOfBirth, genderId, username, email, password } = user;
+
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+        const personInsertQuery = `
+            INSERT INTO person (first_name, last_name, date_of_birth, gender_id)
+            VALUES ($1, $2, $3, $4) RETURNING person_id;
+        `;
+        const personResult = await client.query(personInsertQuery, [firstName, lastName, dateOfBirth, genderId]);
+        const personId = personResult.rows[0].person_id;
+
+        const accountInsertQuery = `
+            INSERT INTO account (person_id, username, email, password)
+            VALUES ($1, $2, $3, $4);
+        `;
+        await client.query(accountInsertQuery, [personId, username, email, hashPassword(password)]);
+
+        await client.query('COMMIT');
+
+        return {
+            personId,
+        };
+    } catch (error) {
+        await client.query('ROLLBACK');
+        throw error;
+    } finally {
+        client.release();
+    }
+};
+
+const updateEmailValidation = async (accountId) => {
+    try {
+        const query = `UPDATE account SET is_validated = true WHERE account_id = $1 AND is_validated = false;`
+        const result = await pool.query(query, [accountId]);
+
+        // Check if a row was updated
+        return result.rowCount > 0;
+    } catch (error) {
+        throw error;
+    }
+};
+
+
+module.exports =  { updatePaswword, deleteUser, updateUser, addUser , updateEmailValidation}; 
