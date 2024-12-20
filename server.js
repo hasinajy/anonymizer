@@ -13,7 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Routes
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerOptions));
+app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerOptions));
 
 app.use('/api/auth', authRoutes);
 
