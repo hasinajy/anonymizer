@@ -1,9 +1,9 @@
 const pool = require('../config/bd');
 const { hashPassword } = require('../utils/hashPassword');
 
-const updatePaswword = async (email, password) => {
-    const query = 'Update account set password = $1 where email = $2';
-    const values = [email, hashPassword(password)];
+const updatePaswword = async (acccountId, password) => {
+    const query = 'Update account set password = $1 where account_id = $2';
+    const values = [accountId, hashPassword(password)];
     try {
         await pool.query(query, values);
     } catch (error) {
