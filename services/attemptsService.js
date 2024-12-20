@@ -25,4 +25,4 @@ const resetAttempts = async (email) => {
     }
 }
 
-module.exports = { canAuthenticate, resetAttempts }; 
+module.exports = { canAuthenticate, resetAttempts };
