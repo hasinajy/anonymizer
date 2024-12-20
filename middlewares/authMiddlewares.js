@@ -21,4 +21,24 @@ const validateSignup = (req, res, next) => {
     next();
 };
 
-module.exports = { validateSignup };
+const validateSignIn = (req, res, next) => {
+    const data = req.body;
+    const errors = [];
+    
+    if(!data.email || !data.password){
+        errors.push("Email and password are required");
+    }
+
+    if (errors.length > 0) {
+        return sendResponse(res, 401, false, "Invalid data", {
+            errors: errors,
+        });
+    }
+    next();
+};
+
+
+module.exports = {
+    validateSignup, 
+    validateSignIn,
+ };
