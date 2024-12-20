@@ -18,13 +18,13 @@ const signup = async (req, res) => {
         });
 
         // Send confirmation email
-        const confirmationLink = `https://localhost:5000/api/auth/signup/confirm/${newUser.personId}`; 
+        const confirmationLink = `https://localhost:5000/api/auth/signup/${newUser.personId}`; 
         const data = {
             "link": confirmationLink,
             "label": 'Validate Subscription'
         }
-
-        await sendSignUpValidation(newUser.email, data)
+        console.log(email);
+        await sendSignUpValidation(email, data)
 
         return sendResponse(res, 200, true, 'User created successfully, check your email to confirm.', null);
     } catch (error) {
