@@ -150,7 +150,7 @@ router.get("/signup/:accountId", validateSignUp);
 
 /**
  * @swagger
- * /signin:
+ * /api/auth/signin:
  *   post:
  *     summary: User Sign-in
  *     description: Authenticates a user by validating their email and PIN. If no PIN is provided, a new PIN is generated and sent to the user's email.
@@ -234,6 +234,77 @@ router.get("/signup/:accountId", validateSignUp);
  *                   example: "Internal server error"
  */
 router.post("/signin", signIn);
+
+/**
+ * @swagger
+ * /api/auth/validate-token:
+ *   get:
+ *     summary: Validate JWT token
+ *     description: Checks the validity of the provided JWT token and returns user information if valid.
+ *     tags:
+ *       - Authentication
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Token is valid.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Token is valid"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     user:
+ *                       type: object
+ *                       description: Information extracted from the token payload.
+ *       '400':
+ *         description: Invalid token format.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid token format"
+ *       '401':
+ *         description: No token provided or token expired.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "No token provided" # Example for missing token.
+ *       '403':
+ *         description: Invalid token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid token"
+ */
 router.get("/validate-token", authenticateToken, validateToken);
 
 module.exports = router;
