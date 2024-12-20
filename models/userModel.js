@@ -35,7 +35,7 @@ const deleteUser = async (email) => {
 };
 
 const updateUser = async (user) => {
-    const { email, username, password, attempts, pin, expiration_date } = user;
+    const { email, username, attempts, pin, expiration_date } = user;
 
     if (!email) {
         throw new Error('Email is required to update the account');
@@ -48,10 +48,6 @@ const updateUser = async (user) => {
     if (username) {
         fields.push(`username = $${index++}`);
         values.push(username);
-    }
-    if (password) {
-        fields.push(`password = $${index++}`);
-        values.push(password);
     }
     if (attempts !== undefined) {
         fields.push(`attempts = $${index++}`);
