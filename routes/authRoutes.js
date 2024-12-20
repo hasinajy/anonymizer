@@ -91,6 +91,57 @@ const router = express.Router();
  */
 router.post("/signup", validateSignup, signup);
 
+/**
+ * @swagger
+ * /api/auth/signup/{accountId}:
+ *   get:
+ *     summary: Validate user signup
+ *     description: Endpoint to validate a user account using the account ID.
+ *     tags:
+ *       - Authentication
+ *     parameters:
+ *       - in: path
+ *         name: accountId
+ *         required: true
+ *         description: Unique identifier for the user account to be validated.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Account validated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Account validated successfully"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *       '401':
+ *         description: Error occurred during validation.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Error while validating sign up"
+ *                 errors:
+ *                   type: object
+ *                   additionalProperties: true
+ */
+router.get("/signup/:accountId", validateSignUp);
+
 router.get("/signup/:accountId", validateSignUp);
 router.post('/signin', signIn);
 
