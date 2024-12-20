@@ -1,7 +1,7 @@
 const pool = require('../config/bd');
 const { hashPassword } = require('../utils/hashPassword');
 
-const updatePaswword = async (acccountId, password) => {
+const updatePasword = async (accountId, password) => {
     const query = 'Update account set password = $1 where account_id = $2';
     const values = [accountId, hashPassword(password)];
     try {
@@ -115,4 +115,4 @@ const updateEmailValidation = async (accountId) => {
 };
 
 
-module.exports =  { updatePaswword, deleteUser, updateUser, addUser , updateEmailValidation}; 
+module.exports =  { updatePasword, deleteUser, updateUser, addUser , updateEmailValidation}; 

@@ -1,5 +1,5 @@
 const { sendResponse } = require("../utils/responseHandler");
-const { deleteUser, updateUser } = require("../models/userModel");
+const { deleteUser, updateUser, updatePasword } = require("../models/userModel");
 
 const deleteAccount = async (req, res) =>{
     const accountId = req.params.accountId;
@@ -33,6 +33,25 @@ const updateAccount = async (req, res) =>{
         })
     }
 }
+
+const updateAccountPassword = async (req, res) =>{
+    const accountId = req.params.accountId;
+    const { newPassword } = req.body;
+
+    try {
+        await updatePasword({ 
+            accountId, 
+            newPassword
+        })
+
+        return sendResponse(res, 200, true, 'Password updated successfully.', null);
+    } catch (error) {
+        return sendResponse(res, 401, false, "Error while updating password", {
+            errors : error
+        })
+    }
+}
+
 
 module.exports = {
     deleteAccount,
