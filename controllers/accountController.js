@@ -1,11 +1,15 @@
 const { sendResponse } = require("../utils/responseHandler");
 const { deleteUser } = require("../models/userModel");
 
-const deleteUser = async (req, res) =>{
-    const { email } = req.body;
+const deleteAccount = async (req, res) =>{
+    const accountId = req.params.accountId;
 
     try {
-        deleteUser(email);
+        if (!accountId) {
+            return sendResponse(res, 400, false, "Account ID is required.", null);
+        }
+        
+        await deleteUser(accountId);
 
         return sendResponse(res, 200, true, 'Account deleted successfully.', null);
     } catch (error) {
@@ -16,5 +20,5 @@ const deleteUser = async (req, res) =>{
 }
 
 module.exports = {
-    deleteUser
+    deleteAccount
 }

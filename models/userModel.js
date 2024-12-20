@@ -12,10 +12,11 @@ const updatePaswword = async (email, password) => {
     }
 };
 
-const deleteUser = async (email) => {
-    const deleteAccountQuery = 'DELETE FROM account WHERE email = $1 RETURNING person_id';
+const deleteUser = async (accountId) => {
+    const deleteAccountQuery = 'DELETE FROM account WHERE account_id = $1 RETURNING person_id';
     const deletePersonQuery = 'DELETE FROM person WHERE person_id = $1';
-    const values = [email];
+    const values = [accountId];
+    console.log(values);
 
     try {
         const result = await pool.query(deleteAccountQuery, values);
