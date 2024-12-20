@@ -142,6 +142,91 @@ router.post("/signup", validateSignup, signup);
  */
 router.get("/signup/:accountId", validateSignUp);
 
+/**
+ * @swagger
+ * /signin:
+ *   post:
+ *     summary: User Sign-in
+ *     description: Authenticates a user by validating their email and PIN. If no PIN is provided, a new PIN is generated and sent to the user's email.
+ *     tags:
+ *       - Authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: User's email address.
+ *               pin:
+ *                 type: string
+ *                 description: PIN for authentication (optional). If omitted, a new PIN will be sent to the email.
+ *             required:
+ *               - email
+ *     responses:
+ *       '200':
+ *         description: Success. Returns a message or a JWT token depending on the operation.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Authentication successful" # Example for successful login.
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   properties:
+ *                     token:
+ *                       type: string
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       '400':
+ *         description: Validation or PIN-related errors.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid PIN. Please input the one sent to your email."
+ *       '404':
+ *         description: Email not registered.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Email is not registered"
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
 router.post('/signin', signIn);
 
 module.exports = router;
