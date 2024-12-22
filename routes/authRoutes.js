@@ -228,7 +228,9 @@ router.get("/signup/:accountId", validateSignUp);
  *                   type: string
  *                   example: "Internal server error"
  */
-router.post("/signin", signIn);
+router.post('/signin', validateSignIn, signInAccount);
+
+router.post('/signin/:accountId', validateSignInAccount);
 
 /**
  * @swagger
