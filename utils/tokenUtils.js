@@ -9,6 +9,15 @@ const isValidToken = (token) => {
     }
 };
 
+const getTokenFromHeaders = (req) => {
+    const authHeader = req.headers['authorization']; 
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        return authHeader.split(' ')[1]; 
+    }
+    return null;
+};
+
 module.exports = {
-    isValidToken
+    isValidToken, 
+    getTokenFromHeaders
 }

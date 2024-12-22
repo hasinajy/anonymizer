@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const authRoutes = require('./routes/authRoutes');
 const swaggerOptions = require('./config/swaggerOptions');
+const accountRoutes = require('./routes/accountRoutes');
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 // Routes
 app.use("/api/docs", swaggerUI.serve, swaggerUI.setup(swaggerOptions));
 
+app.use('/api', accountRoutes);
 app.use('/api/auth', authRoutes);
 
 // Start the server
