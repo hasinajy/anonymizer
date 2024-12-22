@@ -42,6 +42,6 @@ const sendEmail = async (mailOptions) => {
 };
 
 module.exports = {
-    emailPin
+    emailPin,
     sendSignUpValidation
 }

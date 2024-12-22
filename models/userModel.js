@@ -1,21 +1,22 @@
 const pool = require('../config/bd');
 const { hashPassword } = require('../utils/hashPassword');
 
-const updatePaswword = async (email, password) => {
-    const query = 'Update account set password = $1 where email = $2';
-    const values = [email, hashPassword(password)];
+const updatePasword = async (user) => {
+    const { accountId, newPassword} = user;
+    const query = 'Update account set password = $1 where account_id = $2';
     try {
-        await pool.query(query, values);
+        console.log("updatinggg")
+        await pool.query(query, [hashPassword(newPassword), accountId]);
     } catch (error) {
-        console.log('Error for updating password ');
-        throw new Error('Faild to update password ');
+        throw error;
     }
 };
 
-const deleteUser = async (email) => {
-    const deleteAccountQuery = 'DELETE FROM account WHERE email = $1 RETURNING person_id';
+const deleteUser = async (accountId) => {
+    const deleteAccountQuery = 'DELETE FROM account WHERE account_id = $1 RETURNING person_id';
     const deletePersonQuery = 'DELETE FROM person WHERE person_id = $1';
-    const values = [email];
+    const values = [accountId];
+    console.log(values);
 
     try {
         const result = await pool.query(deleteAccountQuery, values);
@@ -35,57 +36,26 @@ const deleteUser = async (email) => {
 };
 
 const updateUser = async (user) => {
-    const { email, username, password, attempts, pin, expiration_date } = user;
+    const { accountId, newUsername } = user;
 
-    if (!email) {
-        throw new Error('Email is required to update the account');
-    }
-
-    const fields = [];
-    const values = [];
-    let index = 1;
-
-    if (username) {
-        fields.push(`username = $${index++}`);
-        values.push(username);
-    }
-    if (password) {
-        fields.push(`password = $${index++}`);
-        values.push(password);
-    }
-    if (attempts !== undefined) {
-        fields.push(`attempts = $${index++}`);
-        values.push(attempts);
-    }
-    if (pin) {
-        fields.push(`pin = $${index++}`);
-        values.push(pin);
-    }
-    if (expiration_date) {
-        fields.push(`expiration_date = $${index++}`);
-        values.push(expiration_date);
+    if (!accountId) {
+        throw new Error('Account ID is required to update the account');
     }
 
-    if (fields.length === 0) {
-        throw new Error('No fields to update');
-    }
-
-    // Add the email for the WHERE clause
-    values.push(email);
-
-    const query = `UPDATE account SET ${fields.join(', ')} WHERE email = $${index}`;
+    console.log(accountId);
+    console.log(newUsername);
+    
+    const query = `UPDATE account SET username = $1 WHERE account_id = $2`;
 
     try {
-        const result = await pool.query(query, values);
+        const result = await pool.query(query, [newUsername, accountId]);
 
         if (result.rowCount === 0) {
-            throw new Error('No account found with the provided email');
+            throw new Error('No account found with the provided accountId');
         }
 
-        return { message: 'Account updated successfully' };
     } catch (err) {
-        console.error('Database error:', err);
-        throw new Error('Failed to update account');
+        throw new Error(err.message);
     }
 };
 
@@ -94,10 +64,47 @@ const findByEmail = async (email) => {
     return await pool.query(query, [email]);
 };
 
+const findByAccountId = async (accountId) => {
+    const query = 'select * from account where account_id = $1';
+    return await pool.query(query, [accountId]);
+};
+
 const updatePin = async (email, pin) => {
-    const query = 'update account set expiration_date = $1 where email = $2';
-    const pinExpiry = Date.now() + 90 * 1000; // 90 seconds expiry
-    return await pool.query(query, [pinExpiry, email]);
+    const query = 'UPDATE account SET pin = $1, expiration_date = $2 WHERE email = $3';
+    const expirationDate = new Date(Date.now() + 90 * 1000).toISOString();
+    const formattedDate = expirationDate.replace('T', ' ').split('.')[0]; 
+    return await pool.query(query, [pin, formattedDate, email]);
+};
+
+
+const signIn = async (email, password) => {
+    try {
+        if (!email || !password) {
+            throw new Error('Email and password are required.');
+        }
+
+        const query = `SELECT account_id, is_validated FROM account WHERE email = $1 AND password = $2;`;
+        const result = await pool.query(query, [email, hashPassword(password)]);
+
+        // Check if user exists
+        if (result.rowCount === 0) {
+            throw new Error('Invalid email or password.');
+        }
+
+        const account = result.rows[0];
+
+        // Check if the account is validated
+        if (!account.is_validated) {
+            throw new Error('Account is not validated. Please verify your email.');
+        }
+
+        return account.account_id;
+
+    } catch (error) {
+
+        console.log(error);
+        throw new Error(error.message || 'Sign-in failed.');
+    }
 };
 
 const decrementAttempt = async (email) => {
@@ -130,7 +137,7 @@ const addUser = async (user) => {
             INSERT INTO account (person_id, username, email, password)
             VALUES ($1, $2, $3, $4);
         `;
-        await client.query(accountInsertQuery, [personId, username, email, password]);
+        await client.query(accountInsertQuery, [personId, username, email, hashPassword(password)]);
 
         await client.query('COMMIT');
 
@@ -157,4 +164,15 @@ const updateEmailValidation = async (accountId) => {
     }
 };
 
-export { updatePaswword, deleteUser, updateUser, findByEmail, updatePin, decrementAttempt, addUser, updateEmailValidation }; 
+module.exports =  { 
+    updatePasword, 
+    deleteUser, 
+    updateUser, 
+    findByEmail, 
+    updatePin, 
+    decrementAttempt, 
+    addUser , 
+    updateEmailValidation,
+    signIn,
+    findByAccountId
+}; 

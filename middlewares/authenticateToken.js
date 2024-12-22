@@ -1,5 +1,5 @@
-import { verify } from 'jsonwebtoken';
-import { sendResponse } from '../utils/responseHandler';
+const { verify } = require('jsonwebtoken');
+const { sendResponse } = require('../utils/responseHandler');
 
 const authenticateToken = (req, res, next) => {
     const token = req.headers['authorization'];
@@ -27,4 +27,6 @@ const authenticateToken = (req, res, next) => {
     }
 };
 
-export default authenticateToken;
+module.exports = {
+    authenticateToken
+};
