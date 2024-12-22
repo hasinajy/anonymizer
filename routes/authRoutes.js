@@ -1,7 +1,7 @@
 const express = require("express");
-const { signup, validateSignUp, signInAccount, validateToken , validateSignInAccount} = require("../controllers/authControllers");
-const { validateSignup,validateSignIn  } = require("../middlewares/authMiddlewares");
-const { authenticateToken } = require("../middlewares/authenticateToken")
+const { signup, validateSignUp, signInAccount, validateToken, validateSignInAccount } = require("../controllers/authControllers");
+const { validateSignup, validateSignIn } = require("../middlewares/authMiddlewares");
+const { authenticateToken } = require("../middlewares/authenticateToken");
 
 const router = express.Router();
 
@@ -162,11 +162,13 @@ router.get("/signup/:accountId", validateSignUp);
  *                 type: string
  *                 format: email
  *                 description: User's email address.
- *               pin:
+ *               password:
  *                 type: string
- *                 description: PIN for authentication (optional). If omitted, a new PIN will be sent to the email.
+ *                 format: password
+ *                 description: User's password.
  *             required:
  *               - email
+ *               - password
  *     responses:
  *       '200':
  *         description: Success. Returns a message or a JWT token depending on the operation.
@@ -180,7 +182,7 @@ router.get("/signup/:accountId", validateSignUp);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Authentication successful" # Example for successful login.
+ *                   example: "Authentication successful"
  *                 data:
  *                   type: object
  *                   nullable: true
@@ -230,6 +232,81 @@ router.get("/signup/:accountId", validateSignUp);
  */
 router.post('/signin', validateSignIn, signInAccount);
 
+/**
+ * @swagger
+ * /api/auth/signin/{accountId}:
+ *   post:
+ *     summary: Validate Sign-in PIN
+ *     description: Validates the PIN sent to the user's email during sign-in.
+ *     tags:
+ *       - Authentication
+ *     parameters:
+ *       - in: path
+ *         name: accountId
+ *         required: true
+ *         description: Unique identifier for the user account.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               PIN:
+ *                 type: string
+ *                 description: PIN for authentication.
+ *             required:
+ *               - PIN
+ *     responses:
+ *       '200':
+ *         description: PIN validated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "PIN validated successfully"
+ *                 data:
+ *                   type: object
+ *                   nullable: true
+ *                   properties:
+ *                     token:
+ *                       type: string
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+ *       '400':
+ *         description: Invalid PIN or PIN expired.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid PIN or PIN expired"
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: false
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ */
 router.post('/signin/:accountId', validateSignInAccount);
 
 /**
@@ -287,7 +364,7 @@ router.post('/signin/:accountId', validateSignInAccount);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: "No token provided" # Example for missing token.
+ *                   example: "No token provided"
  *       '403':
  *         description: Invalid token.
  *         content:
