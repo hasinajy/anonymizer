@@ -118,11 +118,14 @@ If you're running the service locally without Docker:
 
 ```bash
 npm install
+
+# Make sure Nodemon is enabled globally
+npm install -g nodemon
 ```
 
 ### Run the Server
 ```bash
-npm start
+npm run dev
 ```
 
 ## Deployment
