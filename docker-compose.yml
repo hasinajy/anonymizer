@@ -1,0 +1,29 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    environment:
+      - PORT=5000
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=dev_team
+      - POSTGRES_PASSWORD=anonymity
+    volumes:
+      - anonymizer_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  anonymizer_postgres_data:

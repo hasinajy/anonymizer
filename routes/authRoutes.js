@@ -27,6 +27,7 @@ const router = express.Router();
  *               - username
  *               - email
  *               - password
+ *               - passwordConf
  *             properties:
  *               firstName:
  *                 type: string
@@ -52,6 +53,10 @@ const router = express.Router();
  *                 type: string
  *                 format: password
  *                 description: Password for the account.
+ *               passwordConf:
+ *                 type: string
+ *                 format: password
+ *                 description: Password confirmation for the account.
  *     responses:
  *       '200':
  *         description: User successfully created.

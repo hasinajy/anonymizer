@@ -59,28 +59,28 @@ const signInAccount = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const accountId = await signIn(email,password);
+        const accountId = await signIn(email, password);
 
         if (accountId) {
             // 2. Generate PIN
             const generatedPin = generatePin();
-            
+
             // 3. Send PIN to email
             await emailPin(email, generatedPin);
             await userModel.updatePin(email, generatedPin);
 
-            return sendResponse(res, 200, true, 'PIN sent to email',null);
+            return sendResponse(res, 200, true, 'PIN sent to email', null);
         }
 
     } catch (error) {
         console.log(error);
         return sendResponse(res, 500, false, 'Internal server error', {
-            errors : error
+            errors: error
         });
     }
 };
 
-const validateSignInAccount = async (req, res) =>{
+const validateSignInAccount = async (req, res) => {
     const accountId = req.params.accountId;
     const { PIN } = req.body;
 
@@ -88,26 +88,26 @@ const validateSignInAccount = async (req, res) =>{
 
         let result = await findByAccountId(accountId);
         let users = result.rows;
-        const user= users[0];
-        const pinValidation = await validatePinExpiry(user.pin,user.expiration_date, PIN);
+        const user = users[0];
+        const pinValidation = await validatePinExpiry(user.pin, user.expiration_date, PIN);
         console.log(pinValidation);
-        if(pinValidation){
+        if (pinValidation) {
             const token = await generateToken(user);
             console.log(`token : ${token} `);
             await resetAttempts(user.email);
-            generateTokenAccount(req,res);
-        }else{
+            generateTokenAccount(req, res, user, token);
+        } else {
             await userModel.decrementAttempt(user.email);
             return sendResponse(res, 500, false, 'Internal server error', {
-                errors : "PIN invalid or expired"
+                errors: "PIN invalid or expired"
             });
         }
     } catch (error) {
     }
 }
 
-const generateTokenAccount = (req, res) => {
-    sendResponse(res, 200, true, 'Token generated', { user: req.user });
+const generateTokenAccount = (req, res, user, token) => {
+    sendResponse(res, 200, true, 'Token generated', { user: user, token: token });
 };
 
 const validateToken = (req, res) => {
