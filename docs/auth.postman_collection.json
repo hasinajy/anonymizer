@@ -1,0 +1,100 @@
+{
+    "info": {
+        "name": "Authentication API",
+        "description": "Postman collection for Authentication API routes.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Signup",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"name\": \"John Doe\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/auth/signup",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "auth", "signup"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Validate Signup",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/api/auth/signup/:accountId",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "auth", "signup", ":accountId"],
+                    "variable": [{ "key": "accountId", "value": "12345" }]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Sign-in",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/auth/signin",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "auth", "signin"]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Validate Sign-in PIN",
+            "request": {
+                "method": "POST",
+                "header": [
+                    { "key": "Content-Type", "value": "application/json" }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n  \"pin\": \"123456\"\n}"
+                },
+                "url": {
+                    "raw": "{{base_url}}/api/auth/signin/:accountId",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "auth", "signin", ":accountId"],
+                    "variable": [{ "key": "accountId", "value": "12345" }]
+                }
+            },
+            "response": []
+        },
+        {
+            "name": "Validate Token",
+            "request": {
+                "method": "GET",
+                "header": [
+                    { "key": "Authorization", "value": "Bearer {{token}}" }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/api/auth/validate-token",
+                    "host": ["{{base_url}}"],
+                    "path": ["api", "auth", "validate-token"]
+                }
+            },
+            "response": []
+        }
+    ],
+    "variable": [
+        { "key": "base_url", "value": "http://localhost:3000" },
+        { "key": "token", "value": "" }
+    ]
+}
