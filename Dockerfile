@@ -13,7 +13,8 @@ RUN npm ci
 COPY . .
 
 # Rebuild bcrypt
-RUN npm rebuild bcrypt --build-from-source
+RUN npm rebuild bcrypt --build-from-source \
+    && npm install -g nodemon
 
 # Create a non-root user
 RUN addgroup -S appgroup \
@@ -23,4 +24,4 @@ USER appuser
 
 EXPOSE 5000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
