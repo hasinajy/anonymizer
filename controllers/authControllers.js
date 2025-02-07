@@ -8,6 +8,7 @@ const { emailPin } = require('../services/emailService');
 const { generatePin, validatePin, validatePinExpiry } = require('../utils/pinUtils');
 const { generateToken } = require('../utils/jwtUtils');
 const { use } = require("../routes/authRoutes");
+const { hashPassword } = require("../utils/hashPassword");
 
 const signup = async (req, res) => {
     const { firstName, lastName, dateOfBirth, genderId, username, password, email } = req.body;
@@ -25,7 +26,7 @@ const signup = async (req, res) => {
         });
 
         // Send confirmation email
-        const confirmationLink = `https://localhost:5000/api/auth/signup/${newUser.personId}`;
+        const confirmationLink = `http://localhost:5000/api/auth/signup/${newUser.personId}`;
         const data = {
             "link": confirmationLink,
             "label": 'Validate Subscription'
@@ -69,7 +70,7 @@ const signInAccount = async (req, res) => {
             await emailPin(email, generatedPin);
             await userModel.updatePin(email, generatedPin);
 
-            return sendResponse(res, 200, true, 'PIN sent to email', null);
+            return sendResponse(res, 200, true, 'PIN sent to email', accountId);
         }
 
     } catch (error) {
@@ -98,7 +99,7 @@ const validateSignInAccount = async (req, res) => {
             generateTokenAccount(req, res, user, token);
         } else {
             await userModel.decrementAttempt(user.email);
-            return sendResponse(res, 500, false, 'Internal server error', {
+            return sendResponse(res, 500, false, 'PIN invalid or expired', {
                 errors: "PIN invalid or expired"
             });
         }
