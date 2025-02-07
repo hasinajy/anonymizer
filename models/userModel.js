@@ -84,7 +84,10 @@ const signIn = async (email, password) => {
         }
 
         const query = `SELECT account_id, is_validated FROM account WHERE email = $1 AND password = $2;`;
-        const result = await pool.query(query, [email, hashPassword(password)]);
+        console.log(password);
+        const hash = await hashPassword(password);
+        console.log(hash);
+        const result = await pool.query(query, [email, hash]);
 
         // Check if user exists
         if (result.rowCount === 0) {
@@ -137,7 +140,8 @@ const addUser = async (user) => {
             INSERT INTO account (person_id, username, email, password)
             VALUES ($1, $2, $3, $4);
         `;
-        await client.query(accountInsertQuery, [personId, username, email, hashPassword(password)]);
+        let hash = await hashPassword(password);
+        await client.query(accountInsertQuery, [personId, username, email, hash]);
 
         await client.query('COMMIT');
 
